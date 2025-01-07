@@ -1,115 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import {
-//   AppBar,
-//   Toolbar,
-//   Typography,
-//   IconButton,
-//   Button,
-//   Table,
-//   TableHead,
-//   TableRow,
-//   TableCell,
-//   TableBody,
-//   Paper,
-// } from "@mui/material";
-// import NotificationsIcon from "@mui/icons-material/Notifications";
-// import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-// import EditForm from "./EditForm";
-// import { fetchData } from "../../../Service/services";
-
-// const Dashboard2 = () => {
-//   const [data, setData] = useState([]);
-//   const [editModalOpen, setEditModalOpen] = useState(false);
-//   const [selectedRow, setSelectedRow] = useState(null);
-
-//   useEffect(() => {
-//     loadData();
-//   }, []);
-
-//   const loadData = async () => {
-//     try {
-//       const result = await fetchData();
-//       setData(result);
-//     } catch (error) {
-//       console.error("Error fetching data:", error);
-//     }
-//   };
-
-//   const handleEditClick = (row) => {
-//     setSelectedRow(row);
-//     setEditModalOpen(true);
-//   };
-
-//   const handleEditClose = () => {
-//     setEditModalOpen(false);
-//     setSelectedRow(null);
-//   };
-
-//   return (
-//     <div>
-//       <AppBar position="fixed" sx={{ backgroundColor: "#3B92CD" }}>
-//         <Toolbar>
-//           <Typography variant="h6" color="inherit" sx={{ flexGrow: 1 }}>
-//             Dashboard
-//           </Typography>
-//           <IconButton color="inherit">
-//             <NotificationsIcon />
-//           </IconButton>
-//           <IconButton color="inherit">
-//             <AccountCircleIcon />
-//           </IconButton>
-//         </Toolbar>
-//       </AppBar>
-
-//       <div style={{ marginTop: "80px", padding: "16px" }}>
-//         <Paper>
-//           <Table>
-//             <TableHead>
-//               <TableRow>
-//                 <TableCell>Sr. No.</TableCell>
-//                 <TableCell>Component Name</TableCell>
-//                 <TableCell>Value</TableCell>
-//                 <TableCell>Specification</TableCell>
-//                 <TableCell>Edit</TableCell>
-//               </TableRow>
-//             </TableHead>
-//             <TableBody>
-//               {data.map((row, index) => (
-//                 <TableRow key={row.id}>
-//                   <TableCell>{index + 1}</TableCell>
-//                   <TableCell>{row.componentName}</TableCell>
-//                   <TableCell>{row.value}</TableCell>
-//                   <TableCell>{row.specification}</TableCell>
-//                   <TableCell>
-//                     <Button
-//                       variant="contained"
-//                       onClick={() => handleEditClick(row)}
-//                     >
-//                       Edit
-//                     </Button>
-//                   </TableCell>
-//                 </TableRow>
-//               ))}
-//             </TableBody>
-//           </Table>
-//         </Paper>
-//       </div>
-
-//       {/* Edit Form Modal */}
-//       {selectedRow && (
-//         <EditForm
-//           open={editModalOpen}
-//           handleClose={handleEditClose}
-//           data={selectedRow}
-//           onSave={loadData}
-//         />
-//       )}
-//     </div>
-//   );
-// };
-
-// export default Dashboard2;
-
 
 //latest
 import React, { useEffect, useState } from "react";
@@ -159,8 +47,8 @@ const Dashboard2 = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [parentTableData, setParentTableData] = useState([]);
   const [tableData, setTableData] = useState([]);
-  const [selectedSubCategory, setSelectedSubCategory] = useState('All');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedSubCategory, setSelectedSubCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchValue, setSearchValue] = useState("");
   const [selectedItem, setSelectedItem] = useState({});
   const [anchorElLogout, setAnchorElLogout] = useState(null);
@@ -186,7 +74,6 @@ const Dashboard2 = () => {
   const handleMenuCloseLogout = () => {
     setAnchorElLogout(null);
   };
-  
 
   const handleCategoryAndSubCategoryChange = (event, type) => {
     if (type === "subCategory") {
@@ -207,14 +94,18 @@ const Dashboard2 = () => {
   useEffect(() => {
     const applyFilters = () => {
       let filteredData = parentTableData;
-      console.log('ct ',selectedCategory);
-      
-      if (selectedCategory !== 'All') {
-        filteredData = filteredData.filter((item) => item.category === selectedCategory);
+      console.log("ct ", selectedCategory);
+
+      if (selectedCategory !== "All") {
+        filteredData = filteredData.filter(
+          (item) => item.category === selectedCategory
+        );
       }
 
-      if (selectedSubCategory !== 'All') {
-        filteredData = filteredData.filter((item) => item.subCategory === selectedSubCategory);
+      if (selectedSubCategory !== "All") {
+        filteredData = filteredData.filter(
+          (item) => item.subCategory === selectedSubCategory
+        );
       }
 
       if (searchValue) {
@@ -238,8 +129,6 @@ const Dashboard2 = () => {
           })
         );
       }
-      
-      
 
       setTableData(filteredData);
     };
@@ -254,7 +143,7 @@ const Dashboard2 = () => {
 
     // Perform additional logout actions if needed, such as redirecting
     console.log("Logged out successfully");
-    navigate('/login');
+    navigate("/login");
     handleMenuCloseLogout();
   };
 
@@ -263,18 +152,16 @@ const Dashboard2 = () => {
   // Handle Modal Open and Close
   const handleOpen = () => setOpen(true);
   const handleClose = (propertyName) => {
-    
-    if (propertyName === 'EditForm') {
+    if (propertyName === "EditForm") {
       setOpenEditForm(false);
-    } else if (propertyName === 'AvailableForm') {
+    } else if (propertyName === "AvailableForm") {
       setOpenAvailableForm(false);
-    } else if (propertyName === 'HistoryCards') {
+    } else if (propertyName === "HistoryCards") {
       setHistoryCards(false);
     } else {
       setOpen(false);
     }
   };
-
 
   // Menu Item Selection
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
@@ -286,22 +173,23 @@ const Dashboard2 = () => {
   };
 
   const getAllData = () => {
-    const token = sessionStorage.getItem('token');
-    axios.get(`${BASE_URL}item/getAll`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    const token = sessionStorage.getItem("token");
+    axios
+      .get(`${BASE_URL}item/getAll`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => {
         console.log(response);
         setParentTableData(response.data);
-        setTableData(response.data);  // Store the response data in state
+        setTableData(response.data); // Store the response data in state
       })
       .catch((error) => {
         console.error("There was an error fetching the data!", error);
       });
-  }
+  };
 
   useEffect(() => {
     getAllData();
@@ -321,13 +209,13 @@ const Dashboard2 = () => {
       // Retrieve token and id from sessionStorage
       const token = sessionStorage.getItem("token");
       const id = sessionStorage.getItem("UserId");
-  
+
       // Check if token and id are present
       if (!token || !id) {
         console.error("Token or ID is missing");
         return;
       }
-  
+
       // Make API call to change password
       const response = await axios.post(
         "http://localhost:8083/api/changePassword",
@@ -343,7 +231,7 @@ const Dashboard2 = () => {
           },
         }
       );
-  
+
       // Handle response
       if (response.status === 200) {
         alert("Password changed successfully"); // Show success alert
@@ -357,7 +245,6 @@ const Dashboard2 = () => {
       console.error("API error:", error);
     }
   };
-  
 
   return (
     <div>
@@ -386,22 +273,43 @@ const Dashboard2 = () => {
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={(e) => { handleCategoryAndSubCategoryChange("All", "Category") }}>
+              <MenuItem
+                onClick={(e) => {
+                  handleCategoryAndSubCategoryChange("All", "Category");
+                }}
+              >
                 All
               </MenuItem>
-              <MenuItem onClick={(e) => { handleCategoryAndSubCategoryChange("Asset", "Category") }}>
+              <MenuItem
+                onClick={(e) => {
+                  handleCategoryAndSubCategoryChange("Asset", "Category");
+                }}
+              >
                 Asset
               </MenuItem>
-              <MenuItem onClick={(e) => { handleCategoryAndSubCategoryChange("Component", "Category") }}>
+              <MenuItem
+                onClick={(e) => {
+                  handleCategoryAndSubCategoryChange("Component", "Category");
+                }}
+              >
                 Component
               </MenuItem>
             </Menu>
-            <Button color="inherit" onClick={handleOpenModal}>History </Button>
-           
+            <Button color="inherit" onClick={handleOpenModal}>
+              History{" "}
+            </Button>
+
             <Button color="inherit" onClick={handleOpen}>
               Add Element
             </Button>
-            <Button color="inherit" onClick={() => { setHistoryCards(true);}}>Request</Button>
+            <Button
+              color="inherit"
+              onClick={() => {
+                setHistoryCards(true);
+              }}
+            >
+              Request
+            </Button>
             <Typography color="inherit" style={{ marginRight: "16px" }}>
               Contact Us: contact@ceinsys.com
             </Typography>
@@ -422,7 +330,9 @@ const Dashboard2 = () => {
               open={Boolean(anchorElLogout)}
               onClose={handleMenuCloseLogout}
             >
-              <MenuItem onClick={handleOpenChangePasswordModal}>Change Password</MenuItem>
+              <MenuItem onClick={handleOpenChangePasswordModal}>
+                Change Password
+              </MenuItem>
               <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
             </Menu>
           </div>
@@ -431,9 +341,15 @@ const Dashboard2 = () => {
 
       {/* Welcome Section */}
       <div
-        style={{ marginTop: "60px", padding: "16px", backgroundColor: "#A8D2EF" }}
+        style={{
+          marginTop: "60px",
+          padding: "16px",
+          backgroundColor: "#A8D2EF",
+        }}
       >
-        <Typography variant="h5">Welcome {sessionStorage.getItem("Name")}</Typography>
+        <Typography variant="h5">
+          Welcome {sessionStorage.getItem("Name")}
+        </Typography>
         <div
           style={{
             display: "flex",
@@ -446,13 +362,17 @@ const Dashboard2 = () => {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <Select defaultValue="All"
+            <Select
+              defaultValue="All"
               value={selectedSubCategory}
-              onChange={(e) => { handleCategoryAndSubCategoryChange(e, "subCategory") }}
-              style={{ marginRight: "16px", width: "120px" }}>
+              onChange={(e) => {
+                handleCategoryAndSubCategoryChange(e, "subCategory");
+              }}
+              style={{ marginRight: "16px", width: "120px" }}
+            >
               <MenuItem value="All">All</MenuItem>
               <MenuItem value="Electronics">Electronics</MenuItem>
-              <MenuItem value="Mechanics">Mechanics</MenuItem>
+              <MenuItem value="Mechanics">Tools & Instruments</MenuItem>
             </Select>
             <TextField
               variant="outlined"
@@ -507,7 +427,11 @@ const Dashboard2 = () => {
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.value}</TableCell>
                   <TableCell>{row.description}</TableCell>
-                  <TableCell>{row.subCategory}</TableCell>
+                  <TableCell>
+                    {row.subCategory === "Mechanics"
+                      ? "Tools and Instruments"
+                      : row.subCategory}
+                  </TableCell>
                   <TableCell>{row.manufacturer}</TableCell>
                   <TableCell>{row.location}</TableCell>
                   <TableCell>{row.package_box}</TableCell>
@@ -517,29 +441,100 @@ const Dashboard2 = () => {
                   <TableCell>
                     <Button
                       variant="contained"
-                      sx={{ textTransform: 'none' }}
+                      sx={{ textTransform: "none" }}
+                      color={
+                        row.category === "Asset" &&
+                        row.subCategory === "Mechanics"
+                          ? row.stock < 0
+                            ? "error" // Red for unavailable
+                            : "success" // Green for available
+                          : (row.category === "Component" &&
+                              row.subCategory === "Electronics") ||
+                            (row.category === "Component" &&
+                              row.subCategory === "Mechanics") ||
+                            (row.category === "Asset" &&
+                              row.subCategory === "Electronics")
+                          ? row.stock <= 0
+                            ? "error" // Red for unavailable
+                            : row.stock < 10
+                            ? "warning" // Orange for low stock
+                            : "success" // Green for available
+                          : row.stock <= 0
+                          ? "error"
+                          : row.stock < 10
+                          ? "warning"
+                          : "success"
+                      }
+                      onClick={() => {
+                        if (
+                          (row.category === "Component" &&
+                            row.subCategory === "Electronics") ||
+                          (row.category === "Component" &&
+                            row.subCategory === "Mechanics") ||
+                          (row.category === "Asset" &&
+                            row.subCategory === "Electronics") ||
+                          (row.category === "Asset" &&
+                            row.subCategory === "Mechanics")
+                        ) {
+                          if (row.stock > 0) {
+                            setSelectedItem(row);
+                            setOpenAvailableForm(true);
+                          }
+                        }
+                      }}
+                    >
+                      {row.category === "Asset" &&
+                      row.subCategory === "Mechanics"
+                        ? row.stock < 0
+                          ? "Unavailable"
+                          : "Available"
+                        : (row.category === "Component" &&
+                            row.subCategory === "Electronics") ||
+                          (row.category === "Component" &&
+                            row.subCategory === "Mechanics") ||
+                          (row.category === "Asset" &&
+                            row.subCategory === "Electronics")
+                        ? row.stock <= 0
+                          ? "Unavailable"
+                          : row.stock < 10
+                          ? "Low Stock"
+                          : "Available"
+                        : row.stock <= 0
+                        ? "Unavailable"
+                        : row.stock < 10
+                        ? "Low Stock"
+                        : "Available"}
+                    </Button>
+
+                    {/* <Button
+                      variant="contained"
+                      sx={{ textTransform: "none" }}
                       color={row.stock > 0 ? "success" : "error"}
                       onClick={() => {
                         if (row.stock > 0) {
-                          setSelectedItem(row); setOpenAvailableForm(true);
+                          setSelectedItem(row);
+                          setOpenAvailableForm(true);
                         }
                       }}
                     >
                       {row.stock > 0 ? "Availaible" : "Unavailaible"}
-                    </Button>
+                    </Button> */}
                   </TableCell>
                   <TableCell>
                     <Button
                       sx={{
                         backgroundColor: "#CC6CE7", // Custom background color
-                        '&:hover': {
+                        "&:hover": {
                           backgroundColor: "#D17FD6", // Darker shade for hover effect
                         },
                         color: "#fff", // Text color
                       }}
                       variant="contained"
-                      onClick={() => { setOpenEditForm(true); setSelectedItem(row); }}
-                    // onClick={() => alert("Edit Clicked")}
+                      onClick={() => {
+                        setOpenEditForm(true);
+                        setSelectedItem(row);
+                      }}
+                      // onClick={() => alert("Edit Clicked")}
                     >
                       Edit
                     </Button>
@@ -554,7 +549,7 @@ const Dashboard2 = () => {
       {/* Add Element Modal */}
       <Modal
         open={open}
-        onClose={null}  // Prevent closing when clicking outside
+        onClose={null} // Prevent closing when clicking outside
         closeAfterTransition
       >
         <Box
@@ -570,31 +565,34 @@ const Dashboard2 = () => {
             width: "60%",
             maxHeight: "80vh",
             overflowY: "auto",
-            position: "relative" // Add relative positioning to position the close icon
+            position: "relative", // Add relative positioning to position the close icon
           }}
         >
           {/* Close Icon in the top right corner */}
           <IconButton
-            onClick={handleClose}  // Close the modal when clicked
+            onClick={handleClose} // Close the modal when clicked
             sx={{
               position: "absolute",
               top: 8,
               right: 8,
               backgroundColor: "#f44336", // Red background for the close button
               color: "#fff",
-              '&:hover': { backgroundColor: "#d32f2f" }, // Darken red on hover
+              "&:hover": { backgroundColor: "#d32f2f" }, // Darken red on hover
             }}
           >
             <CloseIcon />
           </IconButton>
 
           {/* Add the form from AddElement */}
-          <AddElement handleClose={() => handleClose('AddElement')} getAllData={getAllData} />
+          <AddElement
+            handleClose={() => handleClose("AddElement")}
+            getAllData={getAllData}
+          />
         </Box>
       </Modal>
       <Modal
         open={openHistoryCards}
-        onClose={null}  // Prevent closing when clicking outside
+        onClose={null} // Prevent closing when clicking outside
         closeAfterTransition
       >
         <Box
@@ -610,30 +608,43 @@ const Dashboard2 = () => {
             width: "60%",
             maxHeight: "80vh",
             overflowY: "auto",
-            position: "relative" // Add relative positioning to position the close icon
+            position: "relative", // Add relative positioning to position the close icon
           }}
         >
           {/* Close Icon in the top right corner */}
           <IconButton
-            onClick={() => handleClose('HistoryCards')}  // Close the modal when clicked
+            onClick={() => handleClose("HistoryCards")} // Close the modal when clicked
             sx={{
               position: "absolute",
               top: 8,
               right: 8,
               backgroundColor: "#f44336", // Red background for the close button
               color: "#fff",
-              '&:hover': { backgroundColor: "#d32f2f" }, // Darken red on hover
+              "&:hover": { backgroundColor: "#d32f2f" }, // Darken red on hover
             }}
           >
             <CloseIcon />
           </IconButton>
 
           {/* Add the form from AddElement */}
-          <HistoryCards handleClose={() => handleClose('AddElement')} getAllData={getAllData} />
+          <HistoryCards
+            handleClose={() => handleClose("AddElement")}
+            getAllData={getAllData}
+          />
         </Box>
       </Modal>
-      <EditForm open={openEditForm} data={selectedItem} handleClose={() => handleClose('EditForm')} getAllData={getAllData} />
-      <Available open={openAvailableForm} data={selectedItem} handleClose={() => handleClose('AvailableForm')} getAllData={getAllData} />
+      <EditForm
+        open={openEditForm}
+        data={selectedItem}
+        handleClose={() => handleClose("EditForm")}
+        getAllData={getAllData}
+      />
+      <Available
+        open={openAvailableForm}
+        data={selectedItem}
+        handleClose={() => handleClose("AvailableForm")}
+        getAllData={getAllData}
+      />
       <Modal
         open={openChangePasswordModal}
         onClose={handleCloseChangePasswordModal}
@@ -653,20 +664,12 @@ const Dashboard2 = () => {
             borderRadius: 2,
           }}
         >
-          {/* <IconButton
-            onClick={() => handleCloseChangePasswordModal}  // Close the modal when clicked
-            sx={{
-              position: "absolute",
-              top: 8,
-              right: 8,
-              backgroundColor: "#f44336", // Red background for the close button
-              color: "#fff",
-              '&:hover': { backgroundColor: "#d32f2f" }, // Darken red on hover
-            }}
+          <Typography
+            id="change-password-modal-title"
+            variant="h6"
+            component="h2"
+            mb={2}
           >
-            <CloseIcon />
-          </IconButton> */}
-          <Typography id="change-password-modal-title" variant="h6" component="h2" mb={2}>
             Change Password
           </Typography>
           <TextField
@@ -696,10 +699,8 @@ const Dashboard2 = () => {
         </Box>
       </Modal>
       <RequestHistoryModal open={openModal} handleClose={handleCloseModal} />
-      
     </div>
   );
 };
 
 export default Dashboard2;
-

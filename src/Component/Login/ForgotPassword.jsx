@@ -60,8 +60,6 @@
 
 // export default ForgotPassword;
 
-
-
 import React, { useState } from "react";
 import {
   Button,
@@ -129,9 +127,9 @@ const ForgotPassword = () => {
         top: 0,
         left: 0,
         width: "100%",
-        display:'flex',
-        justifyContent:'center',
-        alignItems:'center'
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
       }}
     >
       <Grid2 container spacing={0} sx={{ overflowY: "auto" }}>

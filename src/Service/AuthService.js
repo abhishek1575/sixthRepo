@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import config from "./Config";
 
@@ -6,14 +5,18 @@ const BASE_URL = config.API_BASE_URL + "auth/";
 
 class AuthService {
   async login(email, password) {
-    const response = await axios
-      .post(BASE_URL + "login", {
+    const response = await axios.post(
+      BASE_URL + "login",
+      {
         email,
         password,
-      }, {
+      },
+      {
         headers: {
-          'Content-Type': 'application/json'
-        }});
+          "Content-Type": "application/json",
+        },
+      }
+    );
     if (response.data.jwt) {
       // console.log("We are Logged in");
       sessionStorage.setItem("UserId", response.data.id);
@@ -29,11 +32,9 @@ class AuthService {
       console.log(sessionStorage.getItem("Name"));
       console.log(sessionStorage.getItem("Email"));
       console.log(sessionStorage.getItem("Role"));
-
-
     }
     return response;
-  };
+  }
 
   logout() {
     sessionStorage.clear();
@@ -62,14 +63,9 @@ class AuthService {
 
 export default new AuthService();
 
-
-
-
-
 // import { Component } from "react";
 // import config from "./Config";
 // import axios from "axios";
-
 
 // const URL = config.server_url+"auth/"
 // class AuthService extends Component{

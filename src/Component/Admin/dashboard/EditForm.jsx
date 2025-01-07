@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Modal, Box, TextField, Button, IconButton, Typography } from "@mui/material";
+import {
+  Grid,
+  Modal,
+  Box,
+  TextField,
+  Button,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { updateItem, deleteItem } from "../../../Service/services";
 
@@ -11,9 +19,9 @@ const EditForm = ({ open, handleClose, data, getAllData }) => {
   }, [data]);
 
   const handleChange = (e) => {
-    console.log('e is ',e.target.value);
-    console.log('f is ',formData);
-    
+    console.log("e is ", e.target.value);
+    console.log("f is ", formData);
+
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -22,7 +30,6 @@ const EditForm = ({ open, handleClose, data, getAllData }) => {
 
   const handleSave = async () => {
     try {
-      
       await updateItem(formData);
       handleClose();
     } catch (error) {
@@ -31,7 +38,7 @@ const EditForm = ({ open, handleClose, data, getAllData }) => {
     getAllData();
   };
 
-  const onSave = ()=>{}
+  const onSave = () => {};
 
   const handleDelete = async () => {
     try {
@@ -83,35 +90,50 @@ const EditForm = ({ open, handleClose, data, getAllData }) => {
               name="componentName"
               label="Component Name"
               value={formData.name || ""}
-              onChange={(e)=>{e.target.name = 'name'; handleChange(e);}}
+              onChange={(e) => {
+                e.target.name = "name";
+                handleChange(e);
+              }}
               sx={{ mb: 2, width: "100%" }}
             />
             <TextField
               name="value"
               label="Value"
               value={formData.value || ""}
-              onChange={(e)=>{e.target.name = 'value'; handleChange(e);}}
+              onChange={(e) => {
+                e.target.name = "value";
+                handleChange(e);
+              }}
               sx={{ mb: 2, width: "100%" }}
             />
             <TextField
               name="specification"
               label="Specification"
               value={formData.description || ""}
-              onChange={(e)=>{e.target.name = 'description'; handleChange(e);}}
+              onChange={(e) => {
+                e.target.name = "description";
+                handleChange(e);
+              }}
               sx={{ mb: 2, width: "100%" }}
             />
             <TextField
               name="subcategory"
               label="Sub Category"
               value={formData.subCategory || ""}
-              onChange={(e)=>{e.target.name = 'subCategory'; handleChange(e);}}
+              onChange={(e) => {
+                e.target.name = "subCategory";
+                handleChange(e);
+              }}
               sx={{ mb: 2, width: "100%" }}
             />
             <TextField
               name="manufacturer"
               label="MFG/Supplier"
               value={formData.manufacturer || ""}
-              onChange={(e)=>{e.target.name = 'manufacturer'; handleChange(e);}}
+              onChange={(e) => {
+                e.target.name = "manufacturer";
+                handleChange(e);
+              }}
               sx={{ mb: 2, width: "100%" }}
             />
           </Grid>
@@ -122,35 +144,50 @@ const EditForm = ({ open, handleClose, data, getAllData }) => {
               name="location"
               label="Location"
               value={formData.location || ""}
-              onChange={(e)=>{e.target.name = 'location'; handleChange(e);}}
+              onChange={(e) => {
+                e.target.name = "location";
+                handleChange(e);
+              }}
               sx={{ mb: 2, width: "100%" }}
             />
             <TextField
               name="package_box"
               label="Package Box"
               value={formData.package_box || ""}
-              onChange={(e)=>{e.target.name = 'package_box'; handleChange(e);}}
+              onChange={(e) => {
+                e.target.name = "package_box";
+                handleChange(e);
+              }}
               sx={{ mb: 2, width: "100%" }}
             />
             <TextField
               name="mpn"
               label="MPN"
               value={formData.mpn || ""}
-              onChange={(e)=>{e.target.name = 'mpn'; handleChange(e);}}
+              onChange={(e) => {
+                e.target.name = "mpn";
+                handleChange(e);
+              }}
               sx={{ mb: 2, width: "100%" }}
             />
             <TextField
               name="sap_no"
               label="SAP No"
               value={formData.sap_no || ""}
-              onChange={(e)=>{e.target.name = 'sap_no'; handleChange(e);}}
+              onChange={(e) => {
+                e.target.name = "sap_no";
+                handleChange(e);
+              }}
               sx={{ mb: 2, width: "100%" }}
             />
             <TextField
               name="stock"
               label="Stock"
               value={formData.stock || ""}
-              onChange={(e)=>{e.target.name = 'stock'; handleChange(e);}}
+              onChange={(e) => {
+                e.target.name = "stock";
+                handleChange(e);
+              }}
               sx={{ mb: 2, width: "100%" }}
             />
           </Grid>

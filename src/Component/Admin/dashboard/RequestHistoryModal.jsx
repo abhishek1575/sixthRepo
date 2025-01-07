@@ -142,7 +142,10 @@ const RequestHistoryModal = ({ open, handleClose }) => {
   }, [open]);
 
   return (
-    <Modal open={open} onClose={(e, reason) => reason === "backdropClick" && e.stopPropagation()}>
+    <Modal
+      open={open}
+      onClose={(e, reason) => reason === "backdropClick" && e.stopPropagation()}
+    >
       <Box
         sx={{
           position: "absolute",
@@ -165,8 +168,8 @@ const RequestHistoryModal = ({ open, handleClose }) => {
               <TableRow>
                 <TableCell>ID</TableCell>
                 <TableCell>Item Name</TableCell>
-                <TableCell>Category</TableCell>
-                <TableCell>SubCategory</TableCell>
+                <TableCell>Value</TableCell>
+                <TableCell>Specification</TableCell>
                 <TableCell>Quantity Requested</TableCell>
                 <TableCell>Approval Status</TableCell>
                 <TableCell>Requested By</TableCell>
@@ -180,8 +183,8 @@ const RequestHistoryModal = ({ open, handleClose }) => {
                 <TableRow key={request.id}>
                   <TableCell>{request.id}</TableCell>
                   <TableCell>{request.item.name}</TableCell>
-                  <TableCell>{request.item.category}</TableCell>
-                  <TableCell>{request.item.subCategory}</TableCell>
+                  <TableCell>{request.item.value}</TableCell>
+                  <TableCell>{request.item.description}</TableCell>
                   <TableCell>{request.quantityRequest}</TableCell>
                   <TableCell>{request.approvalStatus}</TableCell>
                   <TableCell>{request.userName}</TableCell>
@@ -209,4 +212,3 @@ const RequestHistoryModal = ({ open, handleClose }) => {
 };
 
 export default RequestHistoryModal;
-

@@ -1,5 +1,3 @@
-
-
 // // Login.jsx
 // import React, { useState } from "react";
 // import background_image from "../Image/background_image.png";
@@ -308,14 +306,13 @@ function Login() {
     textDecoration: "none",
   };
 
-
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const response =  await AuthService.login(email, password);
-      console.log('response is ',response,'type of', typeof response);
-      
+      const response = await AuthService.login(email, password);
+      console.log("response is ", response, "type of", typeof response);
+
       // debugger
       if (response.data.jwt) {
         // Save token and role to session storage
@@ -362,7 +359,11 @@ function Login() {
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         transitionDuration={0} // Disable animations
       >
-        <Alert onClose={handleSnackbarClose} severity="error" sx={{ width: "100%" }}>
+        <Alert
+          onClose={handleSnackbarClose}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
           {error}
         </Alert>
       </Snackbar>
@@ -421,9 +422,6 @@ function Login() {
 }
 
 export default Login;
-
-
-
 
 // Login.jsx
 // import React, { useState } from "react";
@@ -622,8 +620,6 @@ export default Login;
 
 // export default Login;
 
-
-
 // import React from "react";
 // import background_image from "../Image/background_image.png";
 // import ceinsys_logo from "../Image/ceinsys_logo.png"
@@ -666,7 +662,7 @@ export default Login;
 //         margin: "10px 0", // Adjust spacing between heading and paragraph
 //         textAlign: "center",
 //     };
-    
+
 //     const paragraphStyle = {
 //         color: "#F3E5E5",
 //         fontSize: "40px",

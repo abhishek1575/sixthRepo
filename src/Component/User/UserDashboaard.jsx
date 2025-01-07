@@ -42,7 +42,7 @@ const UserDashboard = () => {
   const [searchValue, setSearchValue] = useState("");
   const [parentTableData, setParentTableData] = useState([]);
   const [tableData, setTableData] = useState([]);
-  const [selectedSubCategory, setSelectedSubCategory] = useState('All');  
+  const [selectedSubCategory, setSelectedSubCategory] = useState("All");
   const [anchorElLogout, setAnchorElLogout] = useState(null);
   const navigate = useNavigate();
   const [openChangePasswordModal, setOpenChangePasswordModal] = useState(false);
@@ -64,10 +64,10 @@ const UserDashboard = () => {
 
     // Perform additional logout actions if needed, such as redirecting
     console.log("Logged out successfully");
-    navigate('/login');
+    navigate("/login");
     handleMenuCloseLogout();
   };
-  //  // Handle Modal Open and Close for available
+   // Handle Modal Open and Close for available
   //  const handleOpen = () => setOpen(true);
   //  const handleClose = (propertyName) => {
   //    if (propertyName === 'AddUserModal') {
@@ -83,148 +83,150 @@ const UserDashboard = () => {
   //  };
 
   const handleCategoryAndSubCategoryChange = (event, type) => {
-      if (type === "subCategory") {
-        const category = event.target.value;
-        setSelectedSubCategory(category);
-      } else {
-        const category = event;
-        setSelectedCategory(category);
+    if (type === "subCategory") {
+      const category = event.target.value;
+      setSelectedSubCategory(category);
+    } else {
+      const category = event;
+      setSelectedCategory(category);
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value.toLowerCase();
+    setSearchValue(value);
+  };
+
+  // Effect for filtering table data
+  useEffect(() => {
+    const applyFilters = () => {
+      let filteredData = parentTableData;
+      console.log("ct ", selectedCategory);
+
+      if (selectedCategory !== "All") {
+        filteredData = filteredData.filter(
+          (item) => item.category === selectedCategory
+        );
       }
+
+      if (selectedSubCategory !== "All") {
+        filteredData = filteredData.filter(
+          (item) => item.subCategory === selectedSubCategory
+        );
+      }
+      if (searchValue) {
+        filteredData = filteredData.filter((item) =>
+          Object.entries(item).some(([key, attr]) => {
+            // Check if the key is 'sapNumber' (or the specific key you are using for SAP Numbers)
+            if (key === "sapNumber" && typeof attr === "number") {
+              const numericSearchValue = Number(searchValue);
+              return !isNaN(numericSearchValue) && attr === numericSearchValue;
+            }
+            // General string search for other fields
+            if (typeof attr === "string") {
+              return attr.toLowerCase().includes(searchValue.toLowerCase());
+            }
+            // For other numeric fields
+            if (typeof attr === "number") {
+              const numericSearchValue = Number(searchValue);
+              return !isNaN(numericSearchValue) && attr === numericSearchValue;
+            }
+            return false;
+          })
+        );
+      }
+
+      setTableData(filteredData);
     };
-  
-    const handleSearchChange = (e) => {
-      const value = e.target.value.toLowerCase();
-      setSearchValue(value);
-    };
-  
-    // Effect for filtering table data
-    useEffect(() => {
-      const applyFilters = () => {
-        let filteredData = parentTableData;
-        console.log('ct ',selectedCategory);
-        
-        if (selectedCategory !== 'All') {
-          filteredData = filteredData.filter((item) => item.category === selectedCategory);
-        }
-  
-        if (selectedSubCategory !== 'All') {
-          filteredData = filteredData.filter((item) => item.subCategory === selectedSubCategory);
-        }
-        if (searchValue) {
-          filteredData = filteredData.filter((item) =>
-            Object.entries(item).some(([key, attr]) => {
-              // Check if the key is 'sapNumber' (or the specific key you are using for SAP Numbers)
-              if (key === "sapNumber" && typeof attr === "number") {
-                const numericSearchValue = Number(searchValue);
-                return !isNaN(numericSearchValue) && attr === numericSearchValue;
-              }
-              // General string search for other fields
-              if (typeof attr === "string") {
-                return attr.toLowerCase().includes(searchValue.toLowerCase());
-              }
-              // For other numeric fields
-              if (typeof attr === "number") {
-                const numericSearchValue = Number(searchValue);
-                return !isNaN(numericSearchValue) && attr === numericSearchValue;
-              }
-              return false;
-            })
-          );
-        }
-  
-        setTableData(filteredData);
-      };
-  
-      applyFilters();
-    }, [selectedCategory, selectedSubCategory, searchValue, parentTableData]);
+
+    applyFilters();
+  }, [selectedCategory, selectedSubCategory, searchValue, parentTableData]);
 
   // Menu Item Selection
   const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
   const handleMenuClose = () => setAnchorEl(null);
 
   const getAllData = () => {
-    const token = sessionStorage.getItem('token');
-    axios.get(`${BASE_URL}item/getAll`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    const token = sessionStorage.getItem("token");
+    axios
+      .get(`${BASE_URL}item/getAll`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => {
         setParentTableData(response.data);
-        setTableData(response.data);  // Store the response data in state
+        setTableData(response.data); // Store the response data in state
       })
       .catch((error) => {
         console.error("There was an error fetching the data!", error);
       });
-  }
+  };
 
   useEffect(() => {
-      getAllData();
-    }, []);
+    getAllData();
+  }, []);
 
-    const handleOpenChangePasswordModal = () => {
-      setOpenChangePasswordModal(true);
-      handleMenuCloseLogout();
-    };
-  
-    const handleCloseChangePasswordModal = () => {
-      setOpenChangePasswordModal(false);
-    };
-  
-    const handleChangePasswordSubmit = async () => {
-      try {
-        // Retrieve token and id from sessionStorage
-        const token = sessionStorage.getItem("token");
-        const id = sessionStorage.getItem("UserId");
-    
-        // Check if token and id are present
-        if (!token || !id) {
-          console.error("Token or ID is missing");
-          return;
-        }
-    
-        // Make API call to change password
-        const response = await axios.post(
-          "http://localhost:8083/api/changePassword",
-          {
-            id: parseInt(id, 10), // Ensure id is sent as a number
-            oldPassword,
-            newPassword,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-    
-        // Handle response
-        if (response.status === 200) {
-          alert("Password changed successfully"); // Show success alert
-          setOpenChangePasswordModal(false);
-          setOldPassword("");
-          setNewPassword("");
-        } else {
-          console.error("Error changing password:", response.data);
-        }
-      } catch (error) {
-        console.error("API error:", error);
+  const handleOpenChangePasswordModal = () => {
+    setOpenChangePasswordModal(true);
+    handleMenuCloseLogout();
+  };
+
+  const handleCloseChangePasswordModal = () => {
+    setOpenChangePasswordModal(false);
+  };
+
+  const handleChangePasswordSubmit = async () => {
+    try {
+      // Retrieve token and id from sessionStorage
+      const token = sessionStorage.getItem("token");
+      const id = sessionStorage.getItem("UserId");
+
+      // Check if token and id are present
+      if (!token || !id) {
+        console.error("Token or ID is missing");
+        return;
       }
-    };
-    
+
+      // Make API call to change password
+      const response = await axios.post(
+        "http://localhost:8083/api/changePassword",
+        {
+          id: parseInt(id, 10), // Ensure id is sent as a number
+          oldPassword,
+          newPassword,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Handle response
+      if (response.status === 200) {
+        alert("Password changed successfully"); // Show success alert
+        setOpenChangePasswordModal(false);
+        setOldPassword("");
+        setNewPassword("");
+      } else {
+        console.error("Error changing password:", response.data);
+      }
+    } catch (error) {
+      console.error("API error:", error);
+    }
+  };
 
   const handleClose = (propertyName) => {
-    if (propertyName === 'AvailableForm') {
+    if (propertyName === "AvailableForm") {
       setOpenAvailableForm(false);
-    }
-    else {
+    } else {
       setOpen(false);
     }
   };
 
-  
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
     handleMenuClose();
@@ -274,17 +276,29 @@ const UserDashboard = () => {
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
+            >
+              <MenuItem
+                onClick={(e) => {
+                  handleCategoryAndSubCategoryChange("All", "Category");
+                }}
               >
-              <MenuItem onClick={(e) => { handleCategoryAndSubCategoryChange("All", "Category") }}>
                 All
               </MenuItem>
-              <MenuItem onClick={(e) => { handleCategoryAndSubCategoryChange("Asset", "Category") }}>
+              <MenuItem
+                onClick={(e) => {
+                  handleCategoryAndSubCategoryChange("Asset", "Category");
+                }}
+              >
                 Asset
               </MenuItem>
-              <MenuItem onClick={(e) => { handleCategoryAndSubCategoryChange("Component", "Category") }}>
+              <MenuItem
+                onClick={(e) => {
+                  handleCategoryAndSubCategoryChange("Component", "Category");
+                }}
+              >
                 Component
-            </MenuItem>
-           </Menu>
+              </MenuItem>
+            </Menu>
             <Button color="inherit">History</Button>
             {/* <Button color="inherit">Request</Button> */}
             <Typography color="inherit" style={{ marginRight: "6px" }}>
@@ -298,27 +312,35 @@ const UserDashboard = () => {
               <NotificationsIcon />
             </IconButton>
             <IconButton color="inherit" onClick={handleMenuOpenLogout}>
-        <AccountCircleIcon />
-      </IconButton>
+              <AccountCircleIcon />
+            </IconButton>
 
-      {/* Dropdown Menu */}
-      <Menu
-        anchorEl={anchorElLogout}
-        open={Boolean(anchorElLogout)}
-        onClose={handleMenuCloseLogout}
-      >
-        <MenuItem onClick={handleOpenChangePasswordModal}>Change Password</MenuItem>
-        <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
-      </Menu>
+            {/* Dropdown Menu */}
+            <Menu
+              anchorEl={anchorElLogout}
+              open={Boolean(anchorElLogout)}
+              onClose={handleMenuCloseLogout}
+            >
+              <MenuItem onClick={handleOpenChangePasswordModal}>
+                Change Password
+              </MenuItem>
+              <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
+            </Menu>
           </div>
         </Toolbar>
       </AppBar>
 
       {/* Welcome Section */}
       <div
-        style={{ marginTop: "60px", padding: "16px", backgroundColor: "#A8D2EF" }}
+        style={{
+          marginTop: "60px",
+          padding: "16px",
+          backgroundColor: "#A8D2EF",
+        }}
       >
-        <Typography variant="h5">Welcome {sessionStorage.getItem("Name")}</Typography>
+        <Typography variant="h5">
+          Welcome {sessionStorage.getItem("Name")}
+        </Typography>
         <div
           style={{
             display: "flex",
@@ -331,22 +353,26 @@ const UserDashboard = () => {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <Select defaultValue="All"
-                value={selectedSubCategory}
-                onChange={(e) => { handleCategoryAndSubCategoryChange(e, "subCategory") }}
-                style={{ marginRight: "16px", width: "120px" }}>
-                <MenuItem value="All">All</MenuItem>
-                <MenuItem value="Electronics">Electronics</MenuItem>
-                <MenuItem value="Mechanics">Mechanics</MenuItem>
-              </Select>
-              <TextField
-                variant="outlined"
-                placeholder="Search"
-                size="small"
-                style={{ marginRight: "16px" }}
-                value={searchValue}
-                onChange={handleSearchChange}
-              />
+            <Select
+              defaultValue="All"
+              value={selectedSubCategory}
+              onChange={(e) => {
+                handleCategoryAndSubCategoryChange(e, "subCategory");
+              }}
+              style={{ marginRight: "16px", width: "120px" }}
+            >
+              <MenuItem value="All">All</MenuItem>
+              <MenuItem value="Electronics">Electronics</MenuItem>
+              <MenuItem value="Mechanics">Tools & Instruments</MenuItem>
+            </Select>
+            <TextField
+              variant="outlined"
+              placeholder="Search"
+              size="small"
+              style={{ marginRight: "16px" }}
+              value={searchValue}
+              onChange={handleSearchChange}
+            />
           </div>
           <div>
             <IconButton color="primary">
@@ -383,27 +409,102 @@ const UserDashboard = () => {
               {tableData.map((row, index) => (
                 <TableRow key={row.id}>
                   <TableCell>{index + 1}</TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.value}</TableCell>
-                    <TableCell>{row.description}</TableCell>
-                    <TableCell>{row.subCategory}</TableCell>
-                    <TableCell>{row.manufacturer}</TableCell>
-                    {/* <TableCell>{row.location}</TableCell> */}
-                    <TableCell>{row.package_box}</TableCell>
-                    <TableCell>{row.mpn}</TableCell>
-                    <TableCell>{row.sap_no}</TableCell>
-                    <TableCell>{row.stock}</TableCell>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell>{row.value}</TableCell>
+                  <TableCell>{row.description}</TableCell>
                   <TableCell>
-                  <Button
+                    {row.subCategory === "Mechanics"
+                      ? "Tools and Instruments"
+                      : row.subCategory}
+                  </TableCell>
+                  <TableCell>{row.manufacturer}</TableCell>
+                  {/* <TableCell>{row.location}</TableCell> */}
+                  <TableCell>{row.package_box}</TableCell>
+                  <TableCell>{row.mpn}</TableCell>
+                  <TableCell>{row.sap_no}</TableCell>
+                  <TableCell>{row.stock}</TableCell>
+                  <TableCell>
+                      <Button
+                        variant="contained"
+                        sx={{ textTransform: "none" }}
+                        color={
+                          row.category === "Asset" &&
+                          row.subCategory === "Mechanics"
+                            ? row.stock < 0
+                              ? "error" // Red for unavailable
+                              : "success" // Green for available
+                            : (row.category === "Component" &&
+                                row.subCategory === "Electronics") ||
+                              (row.category === "Component" &&
+                                row.subCategory === "Mechanics") ||
+                              (row.category === "Asset" &&
+                                row.subCategory === "Electronics")
+                            ? row.stock <= 0
+                              ? "error" // Red for unavailable
+                              : row.stock < 10
+                              ? "warning" // Orange for low stock
+                              : "success" // Green for available
+                            : row.stock <= 0
+                            ? "error"
+                            : row.stock < 10
+                            ? "warning"
+                            : "success"
+                        }
+                        onClick={() => {
+                          if (
+                            (row.category === "Component" &&
+                              row.subCategory === "Electronics") ||
+                            (row.category === "Component" &&
+                              row.subCategory === "Mechanics") ||
+                            (row.category === "Asset" &&
+                              row.subCategory === "Electronics") ||
+                            (row.category === "Asset" &&
+                              row.subCategory === "Mechanics")
+                          ) {
+                            if (row.stock > 0) {
+                              setSelectedItem(row);
+                              setOpenAvailableForm(true);
+                            }
+                          }
+                        }}
+                      >
+                        {row.category === "Asset" &&
+                        row.subCategory === "Mechanics"
+                          ? row.stock < 0
+                            ? "Unavailable"
+                            : "Available"
+                          : (row.category === "Component" &&
+                              row.subCategory === "Electronics") ||
+                            (row.category === "Component" &&
+                              row.subCategory === "Mechanics") ||
+                            (row.category === "Asset" &&
+                              row.subCategory === "Electronics")
+                          ? row.stock <= 0
+                            ? "Unavailable"
+                            : row.stock < 10
+                            ? "Low Stock"
+                            : "Available"
+                          : row.stock <= 0
+                          ? "Unavailable"
+                          : row.stock < 10
+                          ? "Low Stock"
+                          : "Available"}
+                      </Button>
+                    
+                                       
+                    {/* <Button
                       variant="contained"
-                      sx={{ textTransform: 'none' }}
+                      sx={{ textTransform: "none" }}
                       color={row.stock > 0 ? "success" : "error"}
-                      onClick={() => {if(row.stock>0){
-                        setSelectedItem(row); setOpenAvailableForm(true);
-                      }}}
+                      onClick={() => {
+                        if (row.stock > 0) {
+                          setSelectedItem(row);
+                          setOpenAvailableForm(true);
+                        }
+                      }}
                     >
                       {row.stock > 0 ? "Availaible" : "Unavailaible"}
-                    </Button>
+                    </Button> */}
                   </TableCell>
                 </TableRow>
               ))}
@@ -411,7 +512,12 @@ const UserDashboard = () => {
           </Table>
         </Paper>
       </div>
-      <Available open={openAvailableForm} data={selectedItem} handleClose={()=>handleClose('AvailableForm')} getAllData={getAllData}/>
+      <Available
+        open={openAvailableForm}
+        data={selectedItem}
+        handleClose={() => handleClose("AvailableForm")}
+        getAllData={getAllData}
+      />
       <Modal
         open={openChangePasswordModal}
         onClose={handleCloseChangePasswordModal}
@@ -431,20 +537,25 @@ const UserDashboard = () => {
             borderRadius: 2,
           }}
         >
-                  <IconButton
-            onClick={() => handleCloseChangePasswordModal}  // Close the modal when clicked
+          <IconButton
+            onClick={() => handleCloseChangePasswordModal} // Close the modal when clicked
             sx={{
               position: "absolute",
               top: 8,
               right: 8,
               backgroundColor: "#f44336", // Red background for the close button
               color: "#fff",
-              '&:hover': { backgroundColor: "#d32f2f" }, // Darken red on hover
+              "&:hover": { backgroundColor: "#d32f2f" }, // Darken red on hover
             }}
           >
             <CloseIcon />
           </IconButton>
-          <Typography id="change-password-modal-title" variant="h6" component="h2" mb={2}>
+          <Typography
+            id="change-password-modal-title"
+            variant="h6"
+            component="h2"
+            mb={2}
+          >
             Change Password
           </Typography>
           <TextField
@@ -473,13 +584,11 @@ const UserDashboard = () => {
           </Box>
         </Box>
       </Modal>
-     
     </div>
   );
 };
 
 export default UserDashboard;
-
 
 // import React, { useState } from "react";
 // import {
@@ -521,7 +630,6 @@ export default UserDashboard;
 //     handleMenuClose();
 //   };
 
-
 //   return (
 //     <div>
 //       {/* Top App Bar */}
@@ -557,7 +665,7 @@ export default UserDashboard;
 //               </MenuItem>
 //             </Menu>
 //             <Button color="inherit">History</Button>
-            
+
 //             <Button color="inherit">Request</Button>
 //             <Typography color="inherit" style={{ marginRight: "6px" }}>
 //               Contact Us: contact@ceinsys.com
@@ -661,7 +769,7 @@ export default UserDashboard;
 //                       {row.status}
 //                     </Button>
 //                   </TableCell>
-                 
+
 //                 </TableRow>
 //               ))}
 //             </TableBody>
@@ -669,10 +777,8 @@ export default UserDashboard;
 //         </Paper>
 //       </div>
 
-    
 //     </div>
 //   );
 // };
 
 // export default UserDashboard;
-

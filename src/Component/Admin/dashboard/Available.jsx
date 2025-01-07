@@ -1,3 +1,4 @@
+// old running code
 // import React, { useState, useEffect } from "react";
 // import { Grid, Modal, Box, TextField, Button, IconButton, Typography } from "@mui/material";
 // import CloseIcon from "@mui/icons-material/Close";
@@ -11,7 +12,7 @@
 //     setFormData(data);
 //   }, [data]);
 
-//   const handleChange = (ProductItem) => {    
+//   const handleChange = (ProductItem) => {
 //     setAvailableForm({
 //       ...availableForm,
 //       [ProductItem.name]: ProductItem.value,
@@ -22,7 +23,7 @@
 //     try {
 //       setAvailableForm({
 //         ...availableForm,
-        
+
 //       });
 //       const dataToUpload = {id: data.id,...availableForm}
 //       console.log('formdata is ',dataToUpload);
@@ -34,7 +35,7 @@
 //       console.error("Error updating item:", error);
 //     }
 //     getAllData();
-//   };  
+//   };
 
 //   return (
 //     <Modal open={open} onClose={handleClose}>
@@ -83,7 +84,7 @@
 //               name="value"
 //               label="Value"
 //               value={formData?.value || ""}
-//               disabled  
+//               disabled
 //               sx={{ mb: 2, width: "100%" }}
 //             />
 //             <TextField
@@ -144,14 +145,25 @@
 
 // export default Available;
 
+//latest code
 import React, { useState, useEffect } from "react";
-import { Grid, Modal, Box, TextField, Button, IconButton, Typography } from "@mui/material";
+import {
+  Grid,
+  Modal,
+  Box,
+  TextField,
+  Button,
+  IconButton,
+  Typography,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { requestItem } from "../../../Service/services";
 
 const Available = ({ open, handleClose, data, getAllData }) => {
   const [formData, setFormData] = useState(data);
-  const [availableForm, setAvailableForm] = useState({ userName: sessionStorage.getItem("Name") });
+  const [availableForm, setAvailableForm] = useState({
+    userName: sessionStorage.getItem("Name"),
+  });
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -165,56 +177,60 @@ const Available = ({ open, handleClose, data, getAllData }) => {
     });
   };
 
-  const validateFields = () => {
-    const newErrors = {};
+  const validate = () => {
+    let tempErrors = {};
 
-    // Stock validation
-    if (!availableForm?.stock || parseInt(availableForm?.stock) < 1) {
-      newErrors.stock = "Stock must be at least 1.";
-    } else if (parseInt(availableForm?.stock) > parseInt(data?.stock || 0)) {
-      newErrors.stock = `Stock cannot exceed the available stock of ${data?.stock}.`;
-      alert(newErrors.stock); // Show alert if stock exceeds available stock
+    if (
+      !availableForm.quantityRequested ||
+      availableForm.quantityRequested < 1
+    ) {
+      tempErrors.quantityRequested = "Quantity requested must be at least 1";
+    } else if (availableForm.quantityRequested > formData?.stock) {
+      tempErrors.quantityRequested =
+        "Requested quantity exceeds available stock";
     }
 
-    // Project name validation
-    if (!availableForm?.projectName) {
-      newErrors.projectName = "Project name is required.";
-    }
+    if (!availableForm.projectName)
+      tempErrors.projectName = "Project name is required";
+    if (!availableForm.remark) tempErrors.remark = "Remark is required";
 
-    // Remark validation
-    if (!availableForm?.remark) {
-      newErrors.remark = "Remark is required.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors(tempErrors);
+    return Object.keys(tempErrors).length === 0;
   };
 
+  
   const handleSave = async () => {
-    if (!validateFields()) {
-      return; // Stop execution if validation fails
-    }
+    if (!validate()) return;
 
     try {
-      const dataToUpload = { 
-        id: data.id, 
-        stock: availableForm.stock, // Ensure the correct key for stock
-        projectName: availableForm.projectName,
-        remark: availableForm.remark,
-        userName: availableForm.userName,
-      };
-
-      console.log("Form data to upload:", dataToUpload);
-
+      const dataToUpload = { id: data.id, ...availableForm };
+      console.log("formdata is ", dataToUpload);
       await requestItem(dataToUpload);
       handleClose();
-      alert("Request added successfully!!!");
+      alert("Request added successfully!");
+
+      // Call the parent function to fetch updated data
+      getAllData();
     } catch (error) {
       console.error("Error updating item:", error);
     }
-
-    getAllData(); // Refresh data
   };
+
+
+  // const handleSave = async () => {
+  //   if (!validate()) return;
+
+  //   try {
+  //     const dataToUpload = { id: data.id, ...availableForm };
+  //     console.log("formdata is ", dataToUpload);
+  //     await requestItem(dataToUpload);
+  //     handleClose();
+  //     alert("Request added successfully!");
+  //   } catch (error) {
+  //     console.error("Error updating item:", error);
+  //   }
+  //   getAllData();
+  // };
 
   return (
     <Modal open={open} onClose={handleClose}>
@@ -227,7 +243,7 @@ const Available = ({ open, handleClose, data, getAllData }) => {
           bgcolor: "white",
           boxShadow: 24,
           p: 4,
-          width: "60%", // Adjust width to make it suitable for two columns
+          width: "60%",
           borderRadius: 3,
         }}
       >
@@ -247,50 +263,62 @@ const Available = ({ open, handleClose, data, getAllData }) => {
         >
           <CloseIcon />
         </IconButton>
-
-        {/* Grid Layout for Form Fields */}
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Box sx={{ mb: 3 }}>
-              <Typography variant="h6" sx={{ fontWeight: "bold", color: "primary.main" }}>
+              <Typography
+                variant="h6"
+                sx={{ fontWeight: "bold", color: "primary.main" }}
+              >
                 Component Name: {formData?.name}
               </Typography>
-              <Typography variant="body1" sx={{ color: "text.secondary", marginTop: 1 }}>
+              <Typography
+                variant="body1"
+                sx={{ color: "text.secondary", marginTop: 1 }}
+              >
                 Value: {formData?.value}
               </Typography>
-              <Typography variant="body2" sx={{ color: "text.primary", marginTop: 1 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "text.primary", marginTop: 1 }}
+              >
                 Specification: {formData?.description}
-              </Typography>
-              <Typography variant="body2" sx={{ color: "text.primary", marginTop: 1 }}>
-                Available Quantity : {formData?.stock}
               </Typography>
             </Box>
             <TextField
               name="stock"
-              label="Required Quantity"
-              type="number"
-              value={availableForm?.stock || ""}
-              onChange={(e) => handleChange({ name: "stock", value: e.target.value })}
-              error={!!errors.stock}
-              helperText={errors.stock}
+              label="Requested Quantity"
+              value={availableForm?.quantityRequested}
+              onChange={(e) =>
+                handleChange({
+                  name: "quantityRequested",
+                  value: e.target.value,
+                })
+              }
+              error={!!errors.quantityRequested}
+              helperText={errors.quantityRequested}
               sx={{ mb: 2, width: "100%" }}
               required
             />
             <TextField
               name="projectName"
               label="Project Name"
-              value={availableForm?.projectName || ""}
-              onChange={(e) => handleChange({ name: "projectName", value: e.target.value })}
+              value={availableForm?.projectName}
+              onChange={(e) =>
+                handleChange({ name: "projectName", value: e.target.value })
+              }
               error={!!errors.projectName}
               helperText={errors.projectName}
               required
               sx={{ mb: 2, width: "100%" }}
             />
             <TextField
-              name="remark"
+              name="Remark"
               label="Remark"
-              value={availableForm?.remark || ""}
-              onChange={(e) => handleChange({ name: "remark", value: e.target.value })}
+              value={availableForm?.remark}
+              onChange={(e) =>
+                handleChange({ name: "remark", value: e.target.value })
+              }
               error={!!errors.remark}
               helperText={errors.remark}
               sx={{ mb: 2, width: "100%" }}
@@ -299,7 +327,6 @@ const Available = ({ open, handleClose, data, getAllData }) => {
           </Grid>
         </Grid>
 
-        {/* Buttons */}
         <Box display="flex" justifyContent="space-between" mt={2}>
           <Button variant="contained" color="primary" onClick={handleSave}>
             Save
@@ -311,5 +338,3 @@ const Available = ({ open, handleClose, data, getAllData }) => {
 };
 
 export default Available;
-
-

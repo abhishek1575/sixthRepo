@@ -36,11 +36,11 @@ const Dashboard2 = () => {
   const [open, setOpen] = useState(false);
   const [parentTableData, setParentTableData] = useState([]);
   const [tableData, setTableData] = useState([]);
-  const [selectedSubCategory, setSelectedSubCategory] = useState('All');
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedSubCategory, setSelectedSubCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchValue, setSearchValue] = useState("");
   const [anchorEl, setAnchorEl] = useState(null);
- 
+
   const [addUserModal, setAddUserModal] = useState(false);
   const [userTableModal, setUserTableModal] = useState(false);
   const [openAvailableForm, setOpenAvailableForm] = useState(false);
@@ -79,14 +79,18 @@ const Dashboard2 = () => {
   useEffect(() => {
     const applyFilters = () => {
       let filteredData = parentTableData;
-      console.log('ct ',selectedCategory);
-      
-      if (selectedCategory !== 'All') {
-        filteredData = filteredData.filter((item) => item.category === selectedCategory);
+      console.log("ct ", selectedCategory);
+
+      if (selectedCategory !== "All") {
+        filteredData = filteredData.filter(
+          (item) => item.category === selectedCategory
+        );
       }
 
-      if (selectedSubCategory !== 'All') {
-        filteredData = filteredData.filter((item) => item.subCategory === selectedSubCategory);
+      if (selectedSubCategory !== "All") {
+        filteredData = filteredData.filter(
+          (item) => item.subCategory === selectedSubCategory
+        );
       }
 
       if (searchValue) {
@@ -110,15 +114,12 @@ const Dashboard2 = () => {
           })
         );
       }
-      
 
       setTableData(filteredData);
     };
 
     applyFilters();
   }, [selectedCategory, selectedSubCategory, searchValue, parentTableData]);
-
- 
 
   const handleLogoutClick = () => {
     // Clear session and local storage
@@ -127,21 +128,20 @@ const Dashboard2 = () => {
 
     // Perform additional logout actions if needed, such as redirecting
     console.log("Logged out successfully");
-    navigate('/login');
+    navigate("/login");
     handleMenuCloseLogout();
   };
 
   // Handle Modal Open and Close for available
   const handleOpen = () => setOpen(true);
   const handleClose = (propertyName) => {
-    if (propertyName === 'AddUserModal') {
+    if (propertyName === "AddUserModal") {
       setAddUserModal(false);
-    } else if (propertyName === 'UserTableModal') {
+    } else if (propertyName === "UserTableModal") {
       setUserTableModal(false);
-    } else if (propertyName === 'AvailableForm') {
+    } else if (propertyName === "AvailableForm") {
       setOpenAvailableForm(false);
-    }
-    else {
+    } else {
       setOpen(false);
     }
   };
@@ -156,21 +156,22 @@ const Dashboard2 = () => {
   };
 
   const getAllData = () => {
-    const token = sessionStorage.getItem('token');
-    axios.get(`${BASE_URL}item/getAll`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
+    const token = sessionStorage.getItem("token");
+    axios
+      .get(`${BASE_URL}item/getAll`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      })
       .then((response) => {
         setParentTableData(response.data);
-        setTableData(response.data);  // Store the response data in state
+        setTableData(response.data); // Store the response data in state
       })
       .catch((error) => {
         console.error("There was an error fetching the data!", error);
       });
-  }
+  };
 
   useEffect(() => {
     getAllData();
@@ -190,13 +191,13 @@ const Dashboard2 = () => {
       // Retrieve token and id from sessionStorage
       const token = sessionStorage.getItem("token");
       const id = sessionStorage.getItem("UserId");
-  
+
       // Check if token and id are present
       if (!token || !id) {
         console.error("Token or ID is missing");
         return;
       }
-  
+
       // Make API call to change password
       const response = await axios.post(
         "http://localhost:8083/api/changePassword",
@@ -212,7 +213,7 @@ const Dashboard2 = () => {
           },
         }
       );
-  
+
       // Handle response
       if (response.status === 200) {
         alert("Password changed successfully"); // Show success alert
@@ -226,8 +227,6 @@ const Dashboard2 = () => {
       console.error("API error:", error);
     }
   };
-  
-
 
   return (
     <div>
@@ -256,13 +255,25 @@ const Dashboard2 = () => {
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={(e) => { handleCategoryAndSubCategoryChange("All", "Category") }}>
+              <MenuItem
+                onClick={(e) => {
+                  handleCategoryAndSubCategoryChange("All", "Category");
+                }}
+              >
                 All
               </MenuItem>
-              <MenuItem onClick={(e) => { handleCategoryAndSubCategoryChange("Asset", "Category") }}>
+              <MenuItem
+                onClick={(e) => {
+                  handleCategoryAndSubCategoryChange("Asset", "Category");
+                }}
+              >
                 Asset
               </MenuItem>
-              <MenuItem onClick={(e) => { handleCategoryAndSubCategoryChange("Component", "Category") }}>
+              <MenuItem
+                onClick={(e) => {
+                  handleCategoryAndSubCategoryChange("Component", "Category");
+                }}
+              >
                 Component
               </MenuItem>
             </Menu>
@@ -270,7 +281,9 @@ const Dashboard2 = () => {
             <Button color="inherit" onClick={() => setAddUserModal(true)}>
               Add USER
             </Button>
-            <Button color="inherit" onClick={() => setUserTableModal(true)}>USER TABLE</Button>
+            <Button color="inherit" onClick={() => setUserTableModal(true)}>
+              USER TABLE
+            </Button>
             <Typography color="inherit" style={{ marginRight: "16px" }}>
               Contact Us: contact@ceinsys.com
             </Typography>
@@ -291,7 +304,9 @@ const Dashboard2 = () => {
               open={Boolean(anchorElLogout)}
               onClose={handleMenuCloseLogout}
             >
-              <MenuItem onClick={handleOpenChangePasswordModal}>Change Password</MenuItem>
+              <MenuItem onClick={handleOpenChangePasswordModal}>
+                Change Password
+              </MenuItem>
               <MenuItem onClick={handleLogoutClick}>Logout</MenuItem>
             </Menu>
           </div>
@@ -300,9 +315,15 @@ const Dashboard2 = () => {
 
       {/* Welcome Section */}
       <div
-        style={{ marginTop: "60px", padding: "16px", backgroundColor: "#A8D2EF" }}
+        style={{
+          marginTop: "60px",
+          padding: "16px",
+          backgroundColor: "#A8D2EF",
+        }}
       >
-        <Typography variant="h5">Welcome {sessionStorage.getItem("Name")}</Typography>
+        <Typography variant="h5">
+          Welcome {sessionStorage.getItem("Name")}
+        </Typography>
         <div
           style={{
             display: "flex",
@@ -315,13 +336,17 @@ const Dashboard2 = () => {
           }}
         >
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <Select defaultValue="All"
+            <Select
+              defaultValue="All"
               value={selectedSubCategory}
-              onChange={(e) => { handleCategoryAndSubCategoryChange(e, "subCategory") }}
-              style={{ marginRight: "16px", width: "120px" }}>
+              onChange={(e) => {
+                handleCategoryAndSubCategoryChange(e, "subCategory");
+              }}
+              style={{ marginRight: "16px", width: "120px" }}
+            >
               <MenuItem value="All">All</MenuItem>
               <MenuItem value="Electronics">Electronics</MenuItem>
-              <MenuItem value="Mechanics">Mechanics</MenuItem>
+              <MenuItem value="Mechanics">Tools & Instruments</MenuItem>
             </Select>
             <TextField
               variant="outlined"
@@ -375,7 +400,11 @@ const Dashboard2 = () => {
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.value}</TableCell>
                   <TableCell>{row.description}</TableCell>
-                  <TableCell>{row.subCategory}</TableCell>
+                  <TableCell>
+                    {row.subCategory === "Mechanics"
+                      ? "Tools and Instruments"
+                      : row.subCategory}
+                  </TableCell>
                   <TableCell>{row.manufacturer}</TableCell>
                   {/* <TableCell>{row.location}</TableCell> */}
                   <TableCell>{row.package_box}</TableCell>
@@ -385,16 +414,72 @@ const Dashboard2 = () => {
                   <TableCell>
                     <Button
                       variant="contained"
-                      sx={{ textTransform: 'none' }}
-                      color={row.stock > 0 ? "success" : "error"}
+                      sx={{ textTransform: "none" }}
+                      color={
+                        row.category === "Asset" &&
+                        row.subCategory === "Mechanics"
+                          ? row.stock < 0
+                            ? "error" // Red for unavailable
+                            : "success" // Green for available
+                          : (row.category === "Component" &&
+                              row.subCategory === "Electronics") ||
+                            (row.category === "Component" &&
+                              row.subCategory === "Mechanics") ||
+                            (row.category === "Asset" &&
+                              row.subCategory === "Electronics")
+                          ? row.stock <= 0
+                            ? "error" // Red for unavailable
+                            : row.stock < 10
+                            ? "warning" // Orange for low stock
+                            : "success" // Green for available
+                          : row.stock <= 0
+                          ? "error"
+                          : row.stock < 10
+                          ? "warning"
+                          : "success"
+                      }
                       onClick={() => {
-                        if (row.stock > 0) {
-                          setSelectedItem(row); setOpenAvailableForm(true);
+                        if (
+                          (row.category === "Component" &&
+                            row.subCategory === "Electronics") ||
+                          (row.category === "Component" &&
+                            row.subCategory === "Mechanics") ||
+                          (row.category === "Asset" &&
+                            row.subCategory === "Electronics") ||
+                          (row.category === "Asset" &&
+                            row.subCategory === "Mechanics")
+                        ) {
+                          if (row.stock > 0) {
+                            setSelectedItem(row);
+                            setOpenAvailableForm(true);
+                          }
                         }
                       }}
                     >
-                      {row.stock > 0 ? "Availaible" : "Unavailaible"}
+                      {row.category === "Asset" &&
+                      row.subCategory === "Mechanics"
+                        ? row.stock < 0
+                          ? "Unavailable"
+                          : "Available"
+                        : (row.category === "Component" &&
+                            row.subCategory === "Electronics") ||
+                          (row.category === "Component" &&
+                            row.subCategory === "Mechanics") ||
+                          (row.category === "Asset" &&
+                            row.subCategory === "Electronics")
+                        ? row.stock <= 0
+                          ? "Unavailable"
+                          : row.stock < 10
+                          ? "Low Stock"
+                          : "Available"
+                        : row.stock <= 0
+                        ? "Unavailable"
+                        : row.stock < 10
+                        ? "Low Stock"
+                        : "Available"}
                     </Button>
+                   
+                                       
                   </TableCell>
                 </TableRow>
               ))}
@@ -404,7 +489,7 @@ const Dashboard2 = () => {
 
         <Modal
           open={addUserModal}
-          onClose={null}  // Prevent closing when clicking outside
+          onClose={null} // Prevent closing when clicking outside
           closeAfterTransition
         >
           <Box
@@ -420,31 +505,34 @@ const Dashboard2 = () => {
               width: "60%",
               maxHeight: "80vh",
               overflowY: "auto",
-              position: "relative" // Add relative positioning to position the close icon
+              position: "relative", // Add relative positioning to position the close icon
             }}
           >
             {/* Close Icon in the top right corner */}
             <IconButton
-              onClick={() => handleClose('AddUserModal')}  // Close the modal when clicked
+              onClick={() => handleClose("AddUserModal")} // Close the modal when clicked
               sx={{
                 position: "absolute",
                 top: 8,
                 right: 8,
                 backgroundColor: "#f44336", // Red background for the close button
                 color: "#fff",
-                '&:hover': { backgroundColor: "#d32f2f" }, // Darken red on hover
+                "&:hover": { backgroundColor: "#d32f2f" }, // Darken red on hover
               }}
             >
               <CloseIcon />
             </IconButton>
 
             {/* Add the form from AddElement */}
-            <AddUserForm handleClose={() => handleClose('AddUserModal')} getAllData={getAllData} />
+            <AddUserForm
+              handleClose={() => handleClose("AddUserModal")}
+              getAllData={getAllData}
+            />
           </Box>
         </Modal>
         <Modal
           open={userTableModal}
-          onClose={null}  // Prevent closing when clicking outside
+          onClose={null} // Prevent closing when clicking outside
           closeAfterTransition
         >
           <Box
@@ -460,94 +548,106 @@ const Dashboard2 = () => {
               width: "60%",
               maxHeight: "80vh",
               overflowY: "auto",
-              position: "relative" // Add relative positioning to position the close icon
+              position: "relative", // Add relative positioning to position the close icon
             }}
           >
             {/* Close Icon in the top right corner */}
             <IconButton
-              onClick={() => handleClose('UserTableModal')}  // Close the modal when clicked
+              onClick={() => handleClose("UserTableModal")} // Close the modal when clicked
               sx={{
                 position: "absolute",
                 top: 8,
                 right: 8,
                 backgroundColor: "#f44336", // Red background for the close button
                 color: "#fff",
-                '&:hover': { backgroundColor: "#d32f2f" }, // Darken red on hover
+                "&:hover": { backgroundColor: "#d32f2f" }, // Darken red on hover
               }}
             >
               <CloseIcon />
             </IconButton>
 
             {/* Add the form from AddElement */}
-            <UserTable handleClose={() => handleClose('UserTableModal')} getAllData={getAllData} />
+            <UserTable
+              handleClose={() => handleClose("UserTableModal")}
+              getAllData={getAllData}
+            />
           </Box>
         </Modal>
-        <Available open={openAvailableForm} data={selectedItem} handleClose={() => handleClose('AvailableForm')} getAllData={getAllData} />
+        <Available
+          open={openAvailableForm}
+          data={selectedItem}
+          handleClose={() => handleClose("AvailableForm")}
+          getAllData={getAllData}
+        />
         <Modal
-        open={openChangePasswordModal}
-        onClose={handleCloseChangePasswordModal}
-        aria-labelledby="change-password-modal-title"
-      >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: 400,
-            bgcolor: "background.paper",
-            border: "2px solid #000",
-            boxShadow: 24,
-            p: 4,
-            borderRadius: 2,
-          }}
+          open={openChangePasswordModal}
+          onClose={handleCloseChangePasswordModal}
+          aria-labelledby="change-password-modal-title"
         >
-                  <IconButton
-            onClick={() => handleCloseChangePasswordModal}  // Close the modal when clicked
+          <Box
             sx={{
               position: "absolute",
-              top: 8,
-              right: 8,
-              backgroundColor: "#f44336", // Red background for the close button
-              color: "#fff",
-              '&:hover': { backgroundColor: "#d32f2f" }, // Darken red on hover
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: 400,
+              bgcolor: "background.paper",
+              border: "2px solid #000",
+              boxShadow: 24,
+              p: 4,
+              borderRadius: 2,
             }}
           >
-            <CloseIcon />
-          </IconButton>
-          <Typography id="change-password-modal-title" variant="h6" component="h2" mb={2}>
-            Change Password
-          </Typography>
-          <TextField
-            label="Old Password"
-            type="password"
-            fullWidth
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            margin="normal"
-          />
-          <TextField
-            label="New Password"
-            type="password"
-            fullWidth
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            margin="normal"
-          />
-          <Box mt={2} display="flex" justifyContent="flex-end">
-            <Button onClick={handleCloseChangePasswordModal} sx={{ mr: 2 }}>
-              Cancel
-            </Button>
-            <Button variant="contained" onClick={handleChangePasswordSubmit}>
-              Submit
-            </Button>
+            <IconButton
+              onClick={() => handleCloseChangePasswordModal} // Close the modal when clicked
+              sx={{
+                position: "absolute",
+                top: 8,
+                right: 8,
+                backgroundColor: "#f44336", // Red background for the close button
+                color: "#fff",
+                "&:hover": { backgroundColor: "#d32f2f" }, // Darken red on hover
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography
+              id="change-password-modal-title"
+              variant="h6"
+              component="h2"
+              mb={2}
+            >
+              Change Password
+            </Typography>
+            <TextField
+              label="Old Password"
+              type="password"
+              fullWidth
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              margin="normal"
+            />
+            <TextField
+              label="New Password"
+              type="password"
+              fullWidth
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              margin="normal"
+            />
+            <Box mt={2} display="flex" justifyContent="flex-end">
+              <Button onClick={handleCloseChangePasswordModal} sx={{ mr: 2 }}>
+                Cancel
+              </Button>
+              <Button variant="contained" onClick={handleChangePasswordSubmit}>
+                Submit
+              </Button>
+            </Box>
           </Box>
-        </Box>
-      </Modal>
+        </Modal>
       </div>
     </div>
   );
 };
 
 export default Dashboard2;
-

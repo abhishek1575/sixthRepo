@@ -8,31 +8,22 @@ import SuperAdminDashboard from './Component/SuperAdmin/SuperAdminDashboard';
 
 function App() {
   return (
-    // <div>
-    //   <UserDashboard/>
-    // </div>
+  
     <Routes>
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<Login />} />
       <Route path="/forgotpassword" element={<ForgotPassword/>}/>
 
       {/* admin path */}
-      <Route path='/adashboard' element={<Dashboard2/>}/>
+      <Route path='/adashboard' element={<Dashboard2 role="ADMIN"/>}/>
 
        {/*super admin path */}
-      <Route path='/sdashboard' element={<SuperAdminDashboard/>}/>
+      <Route path='/sdashboard' element={<SuperAdminDashboard role="SUPER_ADMIN"/>}/>
 
-      <Route path='/udashboard' element={<UserDashboard/>}/>
+      <Route path='/udashboard' element={<UserDashboard role="USER"/>}/>
 
     </Routes>
 
-   
-    // <Routes>
-    //   <Route path="/" element={<Login />} />
-    //   <Route path="/forgot-password" element={<ForgotPassword />} />
-    //   {/* Add other routes here */}
-    // </Routes>
- 
   );
 }
 

@@ -24,7 +24,9 @@ const resetPassword = async (email, newPassword) => {
 
     return await response.json();
   } catch (error) {
-    throw new Error(error.message || "An error occurred while resetting the password.");
+    throw new Error(
+      error.message || "An error occurred while resetting the password."
+    );
   }
 };
 
